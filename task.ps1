@@ -19,5 +19,5 @@ foreach ($File in $JsonFiles) {
 }
 
 $ResultFile = Join-Path -Path $PSScriptRoot -ChildPath "result.json"
-$ResultArray = $ResultRegions.ToArray() | Sort-Object
+$ResultArray = $ResultRegions | Sort-Object
 $ResultArray | ConvertTo-Json -Depth 5 | Set-Content -Path $ResultFile -Encoding UTF8
