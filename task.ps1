@@ -1,6 +1,6 @@
 $DataFolder = Join-Path -Path $PSScriptRoot -ChildPath "data"
 $TargetVmSize = "Standard_B2pts_v2"
-$ResultRegions = [System.Collections.Generic.HashSet[string]]::new()
+$Regions = @()
 $JsonFiles = Get-ChildItem -Path $DataFolder -Filter *.json -Recurse -File
 
 foreach ($File in $JsonFiles) {
@@ -14,10 +14,10 @@ foreach ($File in $JsonFiles) {
     }
     $Found = $Content | Where-Object { $_.name -eq $TargetVmSize }
     if ($Found) {
-        $null = $ResultRegions.Add($RegionName)
+        $Regions += $RegionName
     }
 }
 
 $ResultFile = Join-Path -Path $PSScriptRoot -ChildPath "result.json"
-$ResultArray = $ResultRegions | Sort-Object
-$ResultArray | ConvertTo-Json -Depth 5 | Set-Content -Path $ResultFile -Encoding UTF8
+$ResultArray = $Regions | Sort-Object -Unique
+$ResultArray | ConvertTo-Json -Depth 5 -Compress | Set-Content -Path $ResultFile -Encoding UTF8
